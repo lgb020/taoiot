@@ -1,0 +1,21 @@
+taoiot:
+  tcp-port: 1996
+  mqtt-port: 1883
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/db_zhiyi_blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+  freemarker:
+    template-loader-path: classpath:/templates/
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      table-underline: true
+  configuration:
+    cache-enabled: false
+    map-underscore-to-camel-case: true
