@@ -63,6 +63,7 @@ public class SecurityProperties implements InitializingBean {
     public void afterPropertiesSet() {
         // 一些默认开放的接口
         permitAllUrls.addAll(Arrays.asList(
+                "/swagger-ui.html",
                 "/v2/**",
                 "/swagger-resources/**",
                 "/webjars/**",

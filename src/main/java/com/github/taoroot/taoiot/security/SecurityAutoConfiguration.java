@@ -3,15 +3,17 @@ package com.github.taoroot.taoiot.security;
 import cn.hutool.core.util.CharsetUtil;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.github.taoroot.taoiot.security.filter.JwtAuthenticationFilter;
 import com.github.taoroot.taoiot.security.service.DbUserDetailsServiceImpl;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,8 +24,10 @@ import javax.annotation.Resource;
  * Date: 2020/2/17
  */
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties(SecurityProperties.class)
-@Import(DbUserDetailsServiceImpl.class)
+@Import({DbUserDetailsServiceImpl.class, SecurityEndpoint.class, SecurityConfigure.class, JwtAuthenticationFilter.class})
 public class SecurityAutoConfiguration {
 
     @Resource

@@ -15,6 +15,7 @@ import com.github.taoroot.taoiot.security.exception.BaseException;
 import com.github.taoroot.taoiot.security.filter.JwtUtil;
 import com.github.taoroot.taoiot.security.filter.ValidateCodeUtil;
 import com.github.taoroot.taoiot.security.service.DbUser;
+import com.github.taoroot.taoiot.swagger.NotSwagger;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -47,10 +47,10 @@ import java.net.URLEncoder;
  * Date: 2020/2/10
  */
 @Log4j2
-@Controller
 @Api(tags = "登录接口")
 @AllArgsConstructor
 @RestControllerAdvice
+@RequestMapping
 public class SecurityEndpoint implements AuthenticationEntryPoint, AccessDeniedHandler {
 
     private final static TimedCache<String, String> UUID_TOKEN_CACHE = new TimedCache<>(1000 * 60 * 5);
@@ -116,7 +116,7 @@ public class SecurityEndpoint implements AuthenticationEntryPoint, AccessDeniedH
         );
     }
 
-    @ApiOperation("利用公众号进行PC登录")
+    @ApiOperation("扫码登录")
     @GetMapping("/mp_callback/{uuid}")
     @SneakyThrows
     @ResponseBody
@@ -129,7 +129,7 @@ public class SecurityEndpoint implements AuthenticationEntryPoint, AccessDeniedH
         return R.ok(token, "登录成功");
     }
 
-    @ApiOperation("支付宝和微信-公众号登录")
+    @ApiOperation("公众号登录")
     @GetMapping("/authorize")
     @SneakyThrows
     @NotAuth
@@ -160,6 +160,7 @@ public class SecurityEndpoint implements AuthenticationEntryPoint, AccessDeniedH
     @GetMapping("/wx/snsapi_base")
     @SneakyThrows
     @NotAuth
+    @NotSwagger
     public String wxUserInfo(@RequestParam("code") String code, @RequestParam("state") String returnUrl) {
         WxMpOAuth2AccessToken accessToken = wxMpService.oauth2getAccessToken(code);
         String openId = accessToken.getOpenId();
@@ -186,6 +187,7 @@ public class SecurityEndpoint implements AuthenticationEntryPoint, AccessDeniedH
 
     @GetMapping("/ali/auth_base")
     @NotAuth
+    @NotSwagger
     public String aliUserInfo(@RequestParam("auth_code") String code, @RequestParam("state") String returnUrl) {
         AlipaySystemOauthTokenRequest request = new AlipaySystemOauthTokenRequest();
         request.setCode(code);

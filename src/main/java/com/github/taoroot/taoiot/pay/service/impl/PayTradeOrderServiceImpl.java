@@ -12,8 +12,8 @@ import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.taoroot.taoiot.common.R;
 import com.github.taoroot.taoiot.common.BrowserUAEnum;
+import com.github.taoroot.taoiot.common.R;
 import com.github.taoroot.taoiot.pay.PayProperties;
 import com.github.taoroot.taoiot.pay.PayTradeStatusEnum;
 import com.github.taoroot.taoiot.pay.entity.PayTradeOrder;
@@ -27,7 +27,6 @@ import com.ijpay.wxpay.model.RefundModel;
 import com.ijpay.wxpay.model.UnifiedOrderModel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,6 @@ import java.util.Map;
  * @author zhiyi
  */
 @Slf4j
-@Service
 @AllArgsConstructor
 public class PayTradeOrderServiceImpl extends ServiceImpl<PayTradeOrderMapper, PayTradeOrder> implements PayTradeOrderService {
 

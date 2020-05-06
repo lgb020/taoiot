@@ -7,11 +7,12 @@ import cn.hutool.core.util.StrUtil;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.taoiot.common.BrowserUAEnum;
-import com.github.taoroot.taoiot.security.annotation.NotAuth;
 import com.github.taoroot.taoiot.pay.entity.PayNotifyRecord;
 import com.github.taoroot.taoiot.pay.entity.PayTradeOrder;
 import com.github.taoroot.taoiot.pay.service.PayNotifyRecordService;
 import com.github.taoroot.taoiot.pay.service.PayTradeOrderService;
+import com.github.taoroot.taoiot.security.annotation.NotAuth;
+import com.github.taoroot.taoiot.swagger.NotSwagger;
 import com.ijpay.core.kit.HttpKit;
 import com.ijpay.core.kit.PayKit;
 import com.ijpay.core.kit.WxPayKit;
@@ -23,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,10 +46,10 @@ import java.util.Map;
  */
 @Api(tags = "支付异步通知")
 @Slf4j
-@RestController
 @AllArgsConstructor
 @RequestMapping("/pay/notify")
 @NotAuth
+@NotSwagger
 public class PayNotifyEndpoint {
     private final PayTradeOrderService payTradeOrderService;
     private final PayNotifyRecordService payNotifyRecordService;

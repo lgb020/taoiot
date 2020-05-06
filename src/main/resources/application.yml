@@ -19,3 +19,10 @@ mybatis-plus:
   configuration:
     cache-enabled: false
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.github.taoroot: debug
+    org.mybatis: info
+    org.springframework.boot: info
