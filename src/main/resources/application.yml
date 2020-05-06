@@ -1,8 +1,6 @@
-taoiot:
-  tcp-port: 1996
-  mqtt-port: 1883
-
 spring:
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -26,3 +24,30 @@ logging:
     com.github.taoroot: debug
     org.mybatis: info
     org.springframework.boot: info
+taoiot:
+  mqtt-port: 1883
+  tcp-port: 1996
+  security:
+    wx:
+      app-id: 123
+      app-secret: 123
+      auth2-url: 123
+      token: 123
+      aeskey: 123
+    ali:
+      app-id: 123
+      private-key: 123
+      public-key: 123
+      auth2-url: 123
+  pay:
+    wx:
+      app-id: ${taoiot.security.wx.app-id}
+      notify-url: 123
+      mch-id: 123
+      partner-key: 123
+      cert-path: 123
+    ali:
+      app-id: ${taoiot.security.ali.app-id}
+      private-key: ${taoiot.security.ali.private-key}
+      public-key: ${taoiot.security.ali.public-key}
+      notify-url: 123

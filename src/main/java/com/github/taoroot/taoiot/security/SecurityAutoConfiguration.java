@@ -42,6 +42,8 @@ public class SecurityAutoConfiguration {
         WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
         wxMpConfigStorage.setAppId(securityProperties.getWx().getAppId());
         wxMpConfigStorage.setSecret(securityProperties.getWx().getAppSecret());
+        wxMpConfigStorage.setToken(securityProperties.getWx().getToken());
+        wxMpConfigStorage.setAesKey(securityProperties.getWx().getAesKey());
         wxMpService.setWxMpConfigStorage(wxMpConfigStorage);
         return wxMpService;
     }

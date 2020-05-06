@@ -1,10 +1,7 @@
 package com.github.taoroot.taoiot.security.service;
 
 import cn.hutool.core.util.IdUtil;
-import com.github.taoroot.taoiot.security.LoginType;
-import com.github.taoroot.taoiot.security.SecurityProperties;
-import com.github.taoroot.taoiot.security.SecurityUser;
-import com.github.taoroot.taoiot.security.SecurityUserDetailsService;
+import com.github.taoroot.taoiot.security.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
@@ -31,8 +28,6 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
     private final SecurityProperties securityProperties;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final String DEFAULT_ROLE = "ROLE_USER";
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -69,7 +64,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                 myUser = new DbUser();
                 myUser.setPassword(passwordEncoder.encode(IdUtil.fastSimpleUUID()));
                 myUser.setRoles("ROLE_USER");
-                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), null, openId, DEFAULT_ROLE);
+                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), null, openId, SecurityUtil.DEFAULT_ROLE);
             }
             myUser = mapper.getByWxMpOpenid(securityProperties.getTableName(), openId);
             return new SecurityUser(
@@ -97,7 +92,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                 myUser = new DbUser();
                 myUser.setPassword(passwordEncoder.encode(IdUtil.fastSimpleUUID()));
                 myUser.setRoles("ROLE_USER");
-                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), openId, null, DEFAULT_ROLE);
+                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), openId, null, SecurityUtil.DEFAULT_ROLE);
             }
             myUser = mapper.getByAliMpOpenid(securityProperties.getTableName(), openId);
             return new SecurityUser(

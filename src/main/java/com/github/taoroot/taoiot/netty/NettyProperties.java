@@ -19,7 +19,17 @@ public class NettyProperties {
     private int mqttPort = 1883;
 
     /**
+     * 开启mqtt
+     */
+    private boolean enableMqtt = true;
+
+    /**
      * TCP 接听端口
      */
     private int tcpPort = 1996;
+
+    /**
+     * 开启Mqtt
+     */
+    private boolean enableTcp = true;
 }

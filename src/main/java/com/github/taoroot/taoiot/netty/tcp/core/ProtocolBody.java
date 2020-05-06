@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 
 /**
  * 基础包接口
+ *
+ * @author zhiyi
  */
 public interface ProtocolBody {
     /**
@@ -13,26 +15,36 @@ public interface ProtocolBody {
 
     /**
      * 编码数据体
+     *
+     * @return
      */
     ByteBuf encodeBody();
 
     /**
      * 获取类型
+     *
+     * @return
      */
     int getPackType();
 
     /**
      * 获取类型-十六进制字符串形式
+     *
+     * @return
      */
     String getPackTypeHexStr();
 
     /**
      * 获取类型说明
+     *
+     * @return
      */
     String getPackTypeDesc();
 
     /**
      * 获取数据-十六进制字符串
+     *
+     * @return
      */
     String getHexStr();
 }

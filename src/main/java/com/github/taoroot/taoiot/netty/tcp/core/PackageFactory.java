@@ -14,7 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 public class PackageFactory {
-    // 记录所有协议包
+    /**
+     * 记录所有协议包
+     */
     public static final Map<Integer, Class<? extends ProtocolBody>> BODY_PACK_MAP = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")

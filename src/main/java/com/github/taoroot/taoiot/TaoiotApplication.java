@@ -1,5 +1,6 @@
 package com.github.taoroot.taoiot;
 
+import com.github.taoroot.taoiot.mp.MpEndpoint;
 import com.github.taoroot.taoiot.netty.NettyAutoConfiguration;
 import com.github.taoroot.taoiot.pay.PayAutoConfiguration;
 import com.github.taoroot.taoiot.security.SecurityAutoConfiguration;
@@ -14,7 +15,12 @@ import org.springframework.context.annotation.Import;
  * @author zhiyi
  */
 @SpringBootApplication(scanBasePackages = "com.github.taoroot.taoiot.service")
-@Import({PayAutoConfiguration.class, SecurityAutoConfiguration.class, NettyAutoConfiguration.class, SwaggerAutoConfiguration.class})
+@Import({PayAutoConfiguration.class,
+        SecurityAutoConfiguration.class,
+        NettyAutoConfiguration.class,
+        SwaggerAutoConfiguration.class,
+        MpEndpoint.class
+})
 public class TaoiotApplication {
 
     public static void main(String[] args) {

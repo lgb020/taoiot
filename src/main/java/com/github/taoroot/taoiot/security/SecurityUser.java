@@ -20,11 +20,10 @@ public class SecurityUser extends User {
      * 用户ID
      */
     private Integer id;
-
     /**
      * 登录方式
      */
-    private LoginType type;
+    private LoginType loginType;
     /**
      * 微信公众号openId
      */
@@ -34,11 +33,10 @@ public class SecurityUser extends User {
      */
     private String aliMpOpenid;
 
-
     public SecurityUser(Integer id, LoginType loginType, String wxMpOpenid, String aliMpOpenid, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
-        this.type = loginType;
+        this.loginType = loginType;
         this.wxMpOpenid = wxMpOpenid;
         this.aliMpOpenid = aliMpOpenid;
     }

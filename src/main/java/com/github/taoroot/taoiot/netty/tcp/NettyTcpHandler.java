@@ -1,5 +1,6 @@
-package com.github.taoroot.taoiot.netty;
+package com.github.taoroot.taoiot.netty.tcp;
 
+import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.tcp.core.AbstractProtocolBody;
 import com.github.taoroot.taoiot.netty.tcp.core.PackageHandler;
 import com.github.taoroot.taoiot.netty.tcp.core.PackageHandlerProcessor;
@@ -16,7 +17,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 @AllArgsConstructor
-public class NettyServerHandler extends SimpleChannelInboundHandler<ProtocolBody> {
+public class NettyTcpHandler extends SimpleChannelInboundHandler<ProtocolBody> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

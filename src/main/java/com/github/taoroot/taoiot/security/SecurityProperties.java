@@ -122,6 +122,14 @@ public class SecurityProperties implements InitializingBean {
          * auth2.0 地址
          */
         private String auth2Url;
+        /**
+         * 公众号服务器token
+         */
+        private String token;
+        /**
+         * 公众号服务器EncodingAESKey
+         */
+        private String aesKey;
     }
 
     /**
