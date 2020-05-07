@@ -36,7 +36,7 @@ ${userId}/taoiot/msg
 举例: 如果 userId = 2020, 主题就是: 2020/taoiot/msg
 
 ## MQTT发送模板给自己公众号,主题格式如下:
-
+**得先关注公众号才能发送模板消息**
 ```
 ${userId}/taoiot/temp/1
 ```
