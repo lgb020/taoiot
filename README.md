@@ -41,11 +41,13 @@ ${userId}/taoiot/temp/1
 ```
 举例: 如果 userId = 2020, 主题就是: 2020/taoiot/temp/1
 
-## 公众号发送到MQTT, 格式录下:
+## 公众号发送到MQTT 格式录下: 
 
 ```
 mqtt:${topic}:${context}
 ```
 
 举例: userId=2020的用户 给 light/001 主题发送消息'off', 则发送: mqtt:light/001:off
-注意: 如果要接收这条消息,则应该订阅主题: 2020/light/001  **(得加上userId)**
+
+**注意: 如果要接收这条消息,则应该订阅主题: 2020/light/001  (!!别忘记加UserId!!)**
+
