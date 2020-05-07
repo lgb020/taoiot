@@ -28,6 +28,7 @@ taoiot:
   mqtt-port: 1883
   tcp-port: 1996
   security:
+    table_name: tb_user
     wx:
       app-id: 123
       app-secret: 123
