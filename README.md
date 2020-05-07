@@ -57,3 +57,11 @@ mqtt:${topic}:${context}
 ![微信搜索公众号: 飞立物联](http://cdn.flizi.cn/img/taoiot_qr.jpg)
 
 MQTT地址: 122.51.85.179:1883
+
+# 支付说明
+
+todo 
+
+# 部署说明
+
+todo
