@@ -22,7 +22,7 @@ public interface DBUserMapper {
     @Select("select * from ${table} where wx_mp_openid = #{openId}")
     DbUser getByWxMpOpenid(@Param("table") String table, @Param("openId") String openId);
 
-    @Update("insert into ${table} (username, password,ali_mp_openid,wx_mp_openid, roles) " +
+    @Update("insert into ${table} (username, password,ali_mp_openid,wx_mp_openid, token, roles) " +
             "values (#{username}, #{password}, #{aliMpOpenid}, #{wxMpOpenid}, #{token}, #{roles})")
     void insert(@Param("table") String table,
                 @Param("username") String username,
