@@ -1,6 +1,6 @@
 package com.github.taoroot.taoiot.netty.service.impl;
 
-import com.github.taoroot.taoiot.netty.service.SecurityService;
+import com.github.taoroot.taoiot.netty.SecurityService;
 import org.springframework.stereotype.Component;
 
 /**

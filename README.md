@@ -32,7 +32,6 @@
 
 从公众号可以对不同的设备发送消息,从设备发送的消息都会发送到当前的公众号(仅个人可见)
 只支持QOS0
-mqtt 协议参考了 https://gitee.com/recallcode/iot-mqtt-server.git
 
 公众号发送格式:
 ```

@@ -1,24 +1,25 @@
 package com.github.taoroot.taoiot.mp;
 
-import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
-import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
+import cn.hutool.cache.impl.TimedCache;
+import com.github.taoroot.taoiot.security.SecurityUser;
+import com.github.taoroot.taoiot.security.SecurityUserDetailsService;
 import com.github.taoroot.taoiot.security.annotation.NotAuth;
-import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.mqtt.*;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.api.WxConsts;
+import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 /**
  * @author zhiyi
  */
-@Slf4j
+@Log4j2
 @RestController
 @RequestMapping("/mp")
 @NotAuth
@@ -26,6 +27,12 @@ import org.springframework.web.bind.annotation.*;
 public class MpEndpoint {
 
     private final WxMpService wxMpService;
+
+    private final SecurityUserDetailsService userDetailsService;
+
+    private final Map<String, MpHandler> handlerMap;
+
+    private static final TimedCache<Long, WxMpXmlMessage> CACHE = new TimedCache<>(1000 * 60 * 24);
 
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String auth(@RequestParam(name = "signature", required = false) String signature,
@@ -43,15 +50,6 @@ public class MpEndpoint {
 
     /**
      * 新的消息
-     *
-     * @param requestBody
-     * @param signature
-     * @param timestamp
-     * @param nonce
-     * @param openid
-     * @param encryptType
-     * @param msgSignature
-     * @return
      */
     @PostMapping(produces = "application/xml; charset=UTF-8")
     public String newMsg(@RequestBody String requestBody,
@@ -66,33 +64,36 @@ public class MpEndpoint {
         if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
             return "-1";
         }
-
-        // 初始化用户上下文
-//        SecurityContextHolder.setContext(null);
-
         WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(requestBody);
         log.info("new msg: {}", inMessage);
 
-        // 文字
-        if (inMessage.getMsgType().equals(WxConsts.XmlMsgType.TEXT)) {
-            // 普通用户
-            // 开发者用户
-            // 1. taoiot:
-            // 2. mqtt:
-            // 3. 其他
+        // 过滤重复消息
+        if (CACHE.get(inMessage.getMsgId()) != null) {
+            return "-1";
         }
-        if (inMessage.getMsgType().equals(WxConsts.XmlMsgType.VOICE)) {
-            MqttPublishMessage publishMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
-                    new MqttFixedHeader(MqttMessageType.PUBLISH, false, MqttQoS.AT_MOST_ONCE, false, 0),
-                    new MqttPublishVariableHeader("topic", 0), Unpooled.buffer().writeBytes(inMessage.getRecognition().getBytes()));
+        CACHE.put(inMessage.getMsgId(), inMessage);
 
-            NettyMqttHandler.channels.writeAndFlush(publishMessage);
+        // 用户登录
+        SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByWechat(openid);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return WxMpXmlOutMessage.TEXT().content("发送成功")
-                    .fromUser(inMessage.getToUser()).toUser(inMessage.getFromUser())
-                    .build().toXml();
+        // 消息处理
+        MpHandler mpHandler = handlerMap.get(inMessage.getMsgType());
+        String result = "消息类型不支持";
+        if (mpHandler != null) {
+            try {
+                result = mpHandler.process(inMessage);
+            } catch (Exception e) {
+                result = "系统异常";
+                log.error(e);
+                e.printStackTrace();
+            }
         }
-        return WxMpXmlOutMessage.TEXT().content("消息有误")
+
+        return WxMpXmlOutMessage.TEXT().content(result)
                 .fromUser(inMessage.getToUser()).toUser(inMessage.getFromUser())
                 .build().toXml();
     }

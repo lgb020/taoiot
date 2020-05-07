@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
-import com.github.taoroot.taoiot.netty.service.SecurityService;
+import com.github.taoroot.taoiot.netty.SecurityService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.CharsetUtil;

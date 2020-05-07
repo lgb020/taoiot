@@ -10,6 +10,9 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface DBUserMapper {
 
+    @Select("select * from ${table} where id = #{id}")
+    DbUser getByUserId(@Param("table") String table, @Param("id") Integer id);
+
     @Select("select * from ${table} where username = #{username}")
     DbUser getByUsername(@Param("table") String table, @Param("username") String username);
 

@@ -5,7 +5,6 @@ import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
 import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -47,8 +46,9 @@ public class MqttSubscribeHandler implements MqttHandler<MqttSubscribeMessage> {
     private boolean validTopicFilter(List<MqttTopicSubscription> topicSubscriptions) {
         for (MqttTopicSubscription topicSubscription : topicSubscriptions) {
             String topicFilter = topicSubscription.topicName();
-            // 以#或+符号开头的、以/符号结尾的及不存在/符号的订阅按非法订阅处理, 这里没有参考标准协议
-            if (StrUtil.startWith(topicFilter, '#') || StrUtil.startWith(topicFilter, '+') || StrUtil.endWith(topicFilter, '/') || !StrUtil.contains(topicFilter, '/')) {
+            if (StrUtil.startWith(topicFilter, '#')
+                    || StrUtil.endWith(topicFilter, '/') || !StrUtil.contains(topicFilter, '/')
+                    || StrUtil.startWith(topicFilter, '+')) {
                 return false;
             }
             if (StrUtil.contains(topicFilter, '#')) {

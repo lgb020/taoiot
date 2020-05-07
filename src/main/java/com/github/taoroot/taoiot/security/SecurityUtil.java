@@ -67,6 +67,6 @@ public class SecurityUtil {
         if (user != null) {
             return user.getId();
         }
-        return -1;
+        return 0;
     }
 }

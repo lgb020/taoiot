@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public interface SecurityUserDetailsService extends UserDetailsService {
 
+    UserDetails loadUserByUserId(Integer userId) throws UsernameNotFoundException;
 
     UserDetails loadUserByWechat(String code) throws UsernameNotFoundException;
 

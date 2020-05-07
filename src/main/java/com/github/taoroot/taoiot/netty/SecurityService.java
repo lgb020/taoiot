@@ -1,4 +1,4 @@
-package com.github.taoroot.taoiot.netty.service;
+package com.github.taoroot.taoiot.netty;
 
 /**
  * @author : zhiyi

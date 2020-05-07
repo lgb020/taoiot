@@ -1,6 +1,6 @@
 package com.github.taoroot.taoiot;
 
-import com.github.taoroot.taoiot.mp.MpEndpoint;
+import com.github.taoroot.taoiot.mp.MpAutoConfiguration;
 import com.github.taoroot.taoiot.netty.NettyAutoConfiguration;
 import com.github.taoroot.taoiot.pay.PayAutoConfiguration;
 import com.github.taoroot.taoiot.security.SecurityAutoConfiguration;
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Import;
         SecurityAutoConfiguration.class,
         NettyAutoConfiguration.class,
         SwaggerAutoConfiguration.class,
-        MpEndpoint.class
+        MpAutoConfiguration.class
 })
 public class TaoiotApplication {
 

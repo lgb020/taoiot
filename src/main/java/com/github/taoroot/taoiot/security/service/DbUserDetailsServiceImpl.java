@@ -56,7 +56,31 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
 
 
     @Override
+    public UserDetails loadUserByUserId(Integer userId) throws UsernameNotFoundException {
+        sqlSessionFactory.getConfiguration().addMapper(DBUserMapper.class);
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            DBUserMapper mapper = session.getMapper(DBUserMapper.class);
+            DbUser myUser = mapper.getByUserId(securityProperties.getTableName(), userId);
+            if (myUser != null) {
+                return new SecurityUser(
+                        myUser.getId(),
+                        LoginType.WX,
+                        myUser.getWxMpOpenid(),
+                        myUser.getAliMpOpenid(),
+                        myUser.getUsername(),
+                        myUser.getPassword(),
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(myUser.getRoles())
+                );
+            }
+        } catch (Exception e) {
+            log.error("数据库查询失败", e);
+        }
+        return null;
+    }
+
+    @Override
     public UserDetails loadUserByWechat(String openId) throws UsernameNotFoundException {
+        sqlSessionFactory.getConfiguration().addMapper(DBUserMapper.class);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             DBUserMapper mapper = session.getMapper(DBUserMapper.class);
             DbUser myUser = mapper.getByWxMpOpenid(securityProperties.getTableName(), openId);
@@ -85,6 +109,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
 
     @Override
     public UserDetails loadUserByAlipay(String openId) throws UsernameNotFoundException {
+        sqlSessionFactory.getConfiguration().addMapper(DBUserMapper.class);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             DBUserMapper mapper = session.getMapper(DBUserMapper.class);
             DbUser myUser = mapper.getByAliMpOpenid(securityProperties.getTableName(), openId);
