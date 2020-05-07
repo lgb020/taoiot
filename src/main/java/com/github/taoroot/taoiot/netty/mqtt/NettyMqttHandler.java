@@ -29,14 +29,6 @@ public class NettyMqttHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) {
-        // 验证身份以前,其他包都不能发送
-        if (!(msg instanceof MqttConnectMessage)) {
-            SecurityUser user = NettyUtil.getUser(ctx.channel());
-            if (user == null) {
-                ctx.close();
-            }
-        }
-
         MqttHandler<? extends MqttMessage> handler = MqttHandlerProcessor.getHandler(msg.getClass());
         if (handler == null) {
             return;

@@ -42,6 +42,10 @@ public class MqttPublishHandler implements MqttHandler<MqttPublishMessage> {
         String userId = topic.split("/")[0];
 
         SecurityUser user = NettyUtil.getUser(channel);
+        if (user == null) {
+            channel.close();
+            return;
+        }
 
         // 不允许push到其他用户上
         if (!user.getId().equals(Integer.parseInt(userId))) {

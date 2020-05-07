@@ -25,6 +25,10 @@ public class MqttSubscribeHandler implements MqttHandler<MqttSubscribeMessage> {
     @Override
     public void process(Channel channel, MqttSubscribeMessage msg) {
         SecurityUser user = NettyUtil.getUser(channel);
+        if (user == null) {
+            channel.close();
+            return;
+        }
 
         List<MqttTopicSubscription> topicSubscriptions = msg.payload().topicSubscriptions();
         if (this.validTopicFilter(topicSubscriptions)) {
