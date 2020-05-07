@@ -1,6 +1,7 @@
 package com.github.taoroot.taoiot.mp;
 
 import cn.hutool.cache.impl.TimedCache;
+import com.github.taoroot.taoiot.security.SecurityProperties;
 import com.github.taoroot.taoiot.security.SecurityUser;
 import com.github.taoroot.taoiot.security.SecurityUserDetailsService;
 import com.github.taoroot.taoiot.security.annotation.NotAuth;
@@ -9,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ public class MpEndpoint {
     private final SecurityUserDetailsService userDetailsService;
 
     private final Map<String, MpHandler> handlerMap;
+
+    private final SecurityProperties securityProperties;
 
     private static final TimedCache<Long, WxMpXmlMessage> CACHE = new TimedCache<>(1000 * 60 * 24);
 
@@ -60,10 +64,12 @@ public class MpEndpoint {
                          @RequestParam(name = "encrypt_type", required = false) String encryptType,
                          @RequestParam(name = "msg_signature", required = false) String msgSignature) {
 
-        // 验证
-        if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+        // 验证 测试账号不进行验证
+        if (StringUtils.isNoneBlank(wxMpService.getWxMpConfigStorage().getAesKey())
+                && !wxMpService.checkSignature(timestamp, nonce, signature)) {
             return "-1";
         }
+
         WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(requestBody);
         log.info("new msg: {}", inMessage);
 

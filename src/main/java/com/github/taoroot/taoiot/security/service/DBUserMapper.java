@@ -23,12 +23,13 @@ public interface DBUserMapper {
     DbUser getByWxMpOpenid(@Param("table") String table, @Param("openId") String openId);
 
     @Update("insert into ${table} (username, password,ali_mp_openid,wx_mp_openid, roles) " +
-            "values (#{username}, #{password}, #{aliMpOpenid}, #{wxMpOpenid}, #{roles})")
+            "values (#{username}, #{password}, #{aliMpOpenid}, #{wxMpOpenid}, #{token}, #{roles})")
     void insert(@Param("table") String table,
                 @Param("username") String username,
                 @Param("password") String password,
                 @Param("aliMpOpenid") String aliMpOpenid,
                 @Param("wxMpOpenid") String wxMpOpenid,
+                @Param("token") String token,
                 @Param("roles") String roles
     );
 }

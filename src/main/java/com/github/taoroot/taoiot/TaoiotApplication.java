@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 /**
- * Idea 开源版不支持Spring提示, 所以框架相关代码都采用手动导入的方式,只有业务代码才拿来扫描
+ * Idea 开源版(别问,问就是穷)不支持Spring提示, 采用手动导入的方式,只有业务代码才拿来扫描
  *
  * @author zhiyi
  */

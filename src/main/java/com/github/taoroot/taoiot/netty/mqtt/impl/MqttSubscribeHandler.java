@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
+import com.github.taoroot.taoiot.security.SecurityUser;
 import io.netty.channel.Channel;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.mqtt.*;
@@ -23,11 +24,18 @@ import java.util.List;
 public class MqttSubscribeHandler implements MqttHandler<MqttSubscribeMessage> {
     @Override
     public void process(Channel channel, MqttSubscribeMessage msg) {
+        SecurityUser user = NettyUtil.getUser(channel);
 
         List<MqttTopicSubscription> topicSubscriptions = msg.payload().topicSubscriptions();
         if (this.validTopicFilter(topicSubscriptions)) {
             List<Integer> qos = new ArrayList<>();
             topicSubscriptions.forEach(topicSubscription -> {
+                // 不允许订阅其他用户主题
+                String userId = topicSubscription.topicName().split("/")[0];
+                if (!user.getId().equals(Integer.parseInt(userId))) {
+                    channel.close();
+                    return;
+                }
                 qos.add(topicSubscription.qualityOfService().value());
                 NettyMqttHandler.TOPICS.putIfAbsent(topicSubscription.topicName(), new DefaultChannelGroup(GlobalEventExecutor.INSTANCE));
                 NettyMqttHandler.TOPICS.get(topicSubscription.topicName()).add(channel);

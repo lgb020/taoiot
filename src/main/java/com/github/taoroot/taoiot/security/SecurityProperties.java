@@ -49,7 +49,7 @@ public class SecurityProperties implements InitializingBean {
     /**
      * 微信参数
      */
-    private WxPayApiConfig wx = new WxPayApiConfig();
+    private WxApiConfig wx = new WxApiConfig();
 
     /**
      * token参数
@@ -105,7 +105,7 @@ public class SecurityProperties implements InitializingBean {
      * 微信配置
      */
     @Data
-    public static class WxPayApiConfig {
+    public static class WxApiConfig {
         /**
          * 返回码
          */
@@ -130,6 +130,10 @@ public class SecurityProperties implements InitializingBean {
          * 公众号服务器EncodingAESKey
          */
         private String aesKey;
+        /**
+         * 推送模板,测试账号需要提供,正常账号不需要配置
+         */
+        private String templateId;
     }
 
     /**

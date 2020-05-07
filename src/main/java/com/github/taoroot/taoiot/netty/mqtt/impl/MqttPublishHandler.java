@@ -1,11 +1,11 @@
 package com.github.taoroot.taoiot.netty.mqtt.impl;
 
+import com.github.taoroot.taoiot.common.Const;
 import com.github.taoroot.taoiot.mp.handler.MpMsgService;
 import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
 import com.github.taoroot.taoiot.security.SecurityUser;
-import com.github.taoroot.taoiot.security.SecurityUserDetailsService;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
@@ -29,7 +29,6 @@ import java.util.Date;
 public class MqttPublishHandler implements MqttHandler<MqttPublishMessage> {
 
     private final MpMsgService mpMsgService;
-    private final SecurityUserDetailsService userDetailsService;
 
     @SneakyThrows
     @Override
@@ -37,39 +36,48 @@ public class MqttPublishHandler implements MqttHandler<MqttPublishMessage> {
         byte[] messageBytes = new byte[msg.payload().readableBytes()];
         msg.payload().getBytes(msg.payload().readerIndex(), messageBytes);
         String context = new String(messageBytes, StandardCharsets.UTF_8);
-        // todo 数据处理
 
         String topic = msg.variableHeader().topicName();
         MqttQoS qos = msg.fixedHeader().qosLevel();
         String userId = topic.split("/")[0];
 
-        SecurityUser user = (SecurityUser) userDetailsService.loadUserByUserId(Integer.valueOf(userId));
+        SecurityUser user = NettyUtil.getUser(channel);
 
-        // 特殊处理
-        mpMsgService.sendTemplateMsg(
-                user.getWxMpOpenid(),
-                NettyUtil.getName(channel),
-                context,
-                "MQTT",
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
-                ""
-        );
+        // 不允许push到其他用户上
+        if (!user.getId().equals(Integer.parseInt(userId))) {
+            channel.close();
+        }
+
+        // 文字消息
+        // userId/taoiot/mp/msg
+        if (topic.equals(userId + "/" + Const.PREFIX + "/mp/msg")) {
+            mpMsgService.sendTextMsg(user.getWxMpOpenid(), NettyUtil.getName(channel), context);
+        }
+
+        // 模板1
+        // userid/taoiot/mp/temp/1
+        if (topic.equals(userId + "/" + Const.PREFIX + "/mp/temp/1")) {
+            // 模板消息
+            mpMsgService.sendTemplateMsg1(
+                    user.getWxMpOpenid(),
+                    NettyUtil.getName(channel),
+                    context,
+                    "MQTT",
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                    "from: " + topic
+            );
+        }
 
         ChannelGroup channelGroup = NettyMqttHandler.TOPICS.get(topic);
 
         if (channelGroup != null) {
             MqttPublishMessage publishMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
-                    new MqttFixedHeader(
-                            MqttMessageType.PUBLISH,
-                            false,
-                            qos,
-                            false,
-                            0),
-                    new MqttPublishVariableHeader(
-                            topic,
-                            0),
+                    new MqttFixedHeader(MqttMessageType.PUBLISH, false, qos, false, 0),
+                    new MqttPublishVariableHeader(topic, 0),
                     Unpooled.buffer().writeBytes(messageBytes));
+
             channelGroup.writeAndFlush(publishMessage);
+
             log.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}, channels: {}",
                     NettyUtil.getName(channel),
                     topic,

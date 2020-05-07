@@ -32,12 +32,17 @@ public class SecurityUser extends User {
      * 支付宝公众号openId
      */
     private String aliMpOpenid;
+    /**
+     * 对外提供数据的使用,作用和密码差不多,但是password能登录平台,toke不能
+     */
+    private String token;
 
-    public SecurityUser(Integer id, LoginType loginType, String wxMpOpenid, String aliMpOpenid, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public SecurityUser(Integer id, LoginType loginType, String wxMpOpenid, String aliMpOpenid, String username, String password, String token, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
         this.loginType = loginType;
         this.wxMpOpenid = wxMpOpenid;
         this.aliMpOpenid = aliMpOpenid;
+        this.token = token;
     }
 }

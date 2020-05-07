@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: test
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -29,12 +29,14 @@ taoiot:
   tcp-port: 1996
   security:
     table_name: tb_user
+    # 到这里申请测试账号 http://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
     wx:
       app-id: 123
       app-secret: 123
       auth2-url: 123
       token: 123
-      aeskey: 123
+      # aeskey: 123 如果是测试账号,注释掉这个
+      # templateId:
     ali:
       app-id: 123
       private-key: 123

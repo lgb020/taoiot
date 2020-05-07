@@ -5,6 +5,7 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.github.taoroot.taoiot.security.filter.JwtAuthenticationFilter;
 import com.github.taoroot.taoiot.security.service.DbUserDetailsServiceImpl;
+import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
  * @author : zhiyi
  * Date: 2020/2/17
  */
+@Log4j2
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -41,6 +43,7 @@ public class SecurityAutoConfiguration {
         WxMpService wxMpService = new WxMpServiceImpl();
         WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
         wxMpConfigStorage.setAppId(securityProperties.getWx().getAppId());
+        log.debug("mp appid: {}", securityProperties.getWx().getAppId());
         wxMpConfigStorage.setSecret(securityProperties.getWx().getAppSecret());
         wxMpConfigStorage.setToken(securityProperties.getWx().getToken());
         wxMpConfigStorage.setAesKey(securityProperties.getWx().getAesKey());

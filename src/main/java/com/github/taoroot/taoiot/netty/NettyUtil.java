@@ -1,5 +1,6 @@
 package com.github.taoroot.taoiot.netty;
 
+import com.github.taoroot.taoiot.security.SecurityUser;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import lombok.experimental.UtilityClass;
@@ -13,6 +14,7 @@ import java.net.InetSocketAddress;
 @UtilityClass
 public class NettyUtil {
     public static final AttributeKey<String> NAME = AttributeKey.valueOf("CHANNEL_NAME");
+    public static final AttributeKey<SecurityUser> USER_DETAIL = AttributeKey.valueOf("USER_DETAIL");
 
     public static final String HEAD = "[%15s]: ";
 
@@ -23,6 +25,15 @@ public class NettyUtil {
     public String getName(Channel channel) {
         return channel.attr(NAME).get();
     }
+
+    public void setUser(Channel channel, SecurityUser securityUser) {
+        channel.attr(USER_DETAIL).set(securityUser);
+    }
+
+    public SecurityUser getUser(Channel channel) {
+        return channel.attr(USER_DETAIL).get();
+    }
+
 
     /**
      * @param channel

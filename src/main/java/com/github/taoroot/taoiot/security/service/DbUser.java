@@ -31,6 +31,9 @@ public class DbUser {
     @ApiModelProperty(value = "支付宝公众号openId")
     private String aliMpOpenid;
 
+    @ApiModelProperty(value = "token")
+    private String token;
+
     @ApiModelProperty(value = "角色列表")
     private String roles;
 }

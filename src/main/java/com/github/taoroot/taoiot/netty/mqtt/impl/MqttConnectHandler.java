@@ -1,10 +1,12 @@
 package com.github.taoroot.taoiot.netty.mqtt.impl;
 
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import com.github.taoroot.taoiot.netty.NettyUtil;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
-import com.github.taoroot.taoiot.netty.SecurityService;
+import com.github.taoroot.taoiot.security.SecurityUser;
+import com.github.taoroot.taoiot.security.SecurityUserDetailsService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.CharsetUtil;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
 
-    private final SecurityService securityService;
+    private final SecurityUserDetailsService securityUserDetailsService;
 
     @Override
     public void process(Channel channel, MqttConnectMessage msg) {
@@ -60,7 +62,10 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
         // 用户名和密码验证, 这里要求客户端连接时必须提供用户名和密码, 不管是否设置用户名标志和密码标志为1, 此处没有参考标准协议实现
         String username = msg.payload().userName();
         String password = msg.payload().passwordInBytes() == null ? null : new String(msg.payload().passwordInBytes(), CharsetUtil.UTF_8);
-        if (!securityService.login(username, password)) {
+
+        SecurityUser userDetails = (SecurityUser) securityUserDetailsService.loadUserByUserId(Integer.parseInt(username));
+
+        if (!login(msg, password, userDetails)) {
             MqttConnAckMessage connAckMessage = (MqttConnAckMessage) MqttMessageFactory.newMessage(
                     new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
                     new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD, false), null);
@@ -69,7 +74,9 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
             return;
         }
 
-        channel.attr(NettyUtil.NAME).set(msg.payload().clientIdentifier());
+        NettyUtil.setName(channel, msg.payload().clientIdentifier());
+        NettyUtil.setUser(channel, userDetails);
+
         NettyMqttHandler.channels.add(channel);
 
         MqttConnAckMessage okResp = (MqttConnAckMessage) MqttMessageFactory.newMessage(
@@ -77,4 +84,10 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
                 new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_ACCEPTED, false), null);
         channel.writeAndFlush(okResp);
     }
+
+    private boolean login(MqttConnectMessage msg, String password, SecurityUser userDetails) {
+        return userDetails != null && userDetails.getToken().equals(password)
+                && Validator.isGeneral(msg.payload().clientIdentifier());
+    }
+
 }

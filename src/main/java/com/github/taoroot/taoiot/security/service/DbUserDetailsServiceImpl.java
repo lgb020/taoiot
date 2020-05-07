@@ -50,6 +50,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                 myUser.getAliMpOpenid(),
                 myUser.getUsername(),
                 myUser.getPassword(),
+                myUser.getToken(),
                 AuthorityUtils.commaSeparatedStringToAuthorityList(myUser.getRoles())
         );
     }
@@ -69,6 +70,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                         myUser.getAliMpOpenid(),
                         myUser.getUsername(),
                         myUser.getPassword(),
+                        myUser.getToken(),
                         AuthorityUtils.commaSeparatedStringToAuthorityList(myUser.getRoles())
                 );
             }
@@ -88,7 +90,8 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                 myUser = new DbUser();
                 myUser.setPassword(passwordEncoder.encode(IdUtil.fastSimpleUUID()));
                 myUser.setRoles("ROLE_USER");
-                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), null, openId, SecurityUtil.DEFAULT_ROLE);
+                myUser.setToken(IdUtil.fastSimpleUUID());
+                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), null, openId, myUser.getToken(), SecurityUtil.DEFAULT_ROLE);
             }
             myUser = mapper.getByWxMpOpenid(securityProperties.getTableName(), openId);
             return new SecurityUser(
@@ -98,6 +101,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                     myUser.getAliMpOpenid(),
                     myUser.getUsername(),
                     myUser.getPassword(),
+                    myUser.getToken(),
                     AuthorityUtils.commaSeparatedStringToAuthorityList(myUser.getRoles())
             );
         } catch (Exception e) {
@@ -117,7 +121,8 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                 myUser = new DbUser();
                 myUser.setPassword(passwordEncoder.encode(IdUtil.fastSimpleUUID()));
                 myUser.setRoles("ROLE_USER");
-                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), openId, null, SecurityUtil.DEFAULT_ROLE);
+                myUser.setToken(IdUtil.fastSimpleUUID());
+                mapper.insert(securityProperties.getTableName(), IdUtil.simpleUUID(), IdUtil.simpleUUID(), openId, null, myUser.getToken(), SecurityUtil.DEFAULT_ROLE);
             }
             myUser = mapper.getByAliMpOpenid(securityProperties.getTableName(), openId);
             return new SecurityUser(
@@ -127,6 +132,7 @@ public class DbUserDetailsServiceImpl implements SecurityUserDetailsService {
                     myUser.getAliMpOpenid(),
                     myUser.getUsername(),
                     myUser.getPassword(),
+                    myUser.getToken(),
                     AuthorityUtils.commaSeparatedStringToAuthorityList(myUser.getRoles())
             );
         } catch (Exception e) {

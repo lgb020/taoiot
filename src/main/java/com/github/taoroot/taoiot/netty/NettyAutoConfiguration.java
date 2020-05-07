@@ -3,7 +3,6 @@ package com.github.taoroot.taoiot.netty;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandler;
 import com.github.taoroot.taoiot.netty.mqtt.MqttHandlerProcessor;
 import com.github.taoroot.taoiot.netty.mqtt.NettyMqttHandler;
-import com.github.taoroot.taoiot.netty.service.impl.SecurityServiceImpl;
 import com.github.taoroot.taoiot.netty.tcp.core.PackageFactory;
 import com.github.taoroot.taoiot.netty.tcp.core.PackageHandler;
 import com.github.taoroot.taoiot.netty.tcp.core.PackageHandlerProcessor;
@@ -25,7 +24,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -37,7 +35,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @EnableConfigurationProperties(NettyProperties.class)
-@Import(SecurityServiceImpl.class)
 @ComponentScan({
         "com.github.taoroot.taoiot.netty.tcp.impl",
         "com.github.taoroot.taoiot.netty.mqtt.impl"
