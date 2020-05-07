@@ -35,7 +35,7 @@ public class MpTextHandler implements MpHandler {
         if (StringUtils.startsWithIgnoreCase(content, "taoiot")) {
             // 获取token
             if ("taoiot:get_token".equals(content)) {
-                return "token: " + SecurityUtil.getUser().getToken();
+                return "userId: " + SecurityUtil.getUser().getId() + ", token: " + SecurityUtil.getUser().getToken();
             }
         }
 
