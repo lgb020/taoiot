@@ -5,6 +5,7 @@
 
 ![流程图](http://cdn.flizi.cn/img/taoiot_lct.png)
 
+
 # 使用场景: 
 
 1. 查找树莓派信息(局域网IP, CPU温度...) 
@@ -51,3 +52,12 @@ mqtt:${topic}:${context}
 
 **注意: 如果要接收这条消息,则应该订阅主题: 2020/light/001  (!!别忘记加UserId!!)**
 
+# 如何部署
+
+todo, 可以自己用我的公众号
+
+# 公众号[飞立物联]
+
+![微信搜索公众号: 飞立物联](http://cdn.flizi.cn/img/taoiot_qr.jpg)
+
+MQTT地址: 122.51.85.179:1883
