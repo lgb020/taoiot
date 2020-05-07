@@ -11,12 +11,14 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.CharsetUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 /**
  * @author : zhiyi
  * Date: 2020/5/6
  */
+@Log4j2
 @Component
 @AllArgsConstructor
 public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
@@ -28,6 +30,7 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
         // 消息解码器出现异常
         if (msg.decoderResult().isFailure()) {
             Throwable cause = msg.decoderResult().cause();
+            log.error(cause);
             if (cause instanceof MqttUnacceptableProtocolVersionException) {
                 // 不支持的协议版本
                 MqttConnAckMessage connAckMessage = (MqttConnAckMessage) MqttMessageFactory.newMessage(
@@ -55,6 +58,7 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
                     new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
                     new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_IDENTIFIER_REJECTED, false), null);
             channel.writeAndFlush(connAckMessage);
+            log.error("无");
             channel.close();
             return;
         }
@@ -70,6 +74,7 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
                     new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
                     new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD, false), null);
             channel.writeAndFlush(connAckMessage);
+            log.error("密码错误");
             channel.close();
             return;
         }
@@ -82,6 +87,7 @@ public class MqttConnectHandler implements MqttHandler<MqttConnectMessage> {
         MqttConnAckMessage okResp = (MqttConnAckMessage) MqttMessageFactory.newMessage(
                 new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
                 new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_ACCEPTED, false), null);
+        log.error("链接成功");
         channel.writeAndFlush(okResp);
     }
 
