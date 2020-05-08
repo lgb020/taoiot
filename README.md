@@ -1,7 +1,7 @@
 物联网-公众号交互中间件
 
 
-![流程图](http://cdn.flizi.cn/img/taoiot_lct.png)
+![流程图](http://cdn.flizi.cn/img/taoiot/lct.png)
 
 
 # 使用场景: 
@@ -52,7 +52,7 @@ mqtt:${topic}:${context}
 
 # 公众号[飞立物联]
 
-![微信搜索公众号: 飞立物联](http://cdn.flizi.cn/img/taoiot_qr.jpg)
+![微信搜索公众号: 飞立物联](http://cdn.flizi.cn/img/taoiot/qr.jpg)
 
 MQTT地址: 122.51.85.179:1883
 
@@ -67,9 +67,13 @@ todo
 # 案例
 
 1. 获取局域网IP
+
+![获取局域网IP](http://cdn.flizi.cn/img/taoiot/send_ip.jpg)
+
 ```python
 # encoding: utf-8
 
+# 通过 pip install paho-mqtt 安装mqtt库
 import paho.mqtt.client as mqtt
 import socket
 
