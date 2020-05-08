@@ -83,7 +83,7 @@ import socket
 
 # 填写你的userId,在公众号里面发送 taoiot:get_token 获取
 USERNAME=""
-# 填写你的password,在公众号里面发送 taoiot:get_token 获取
+# 填写你的token,在公众号里面发送 taoiot:get_token 获取
 PASSWORD=""
 # 一般可以不用变, 如果你有多个设备,想做区分的话就需要修改了,确保自己能分别出来,消息是哪个设备发给你的
 CLIENT_ID="pi"
